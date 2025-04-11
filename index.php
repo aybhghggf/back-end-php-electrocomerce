@@ -1,8 +1,8 @@
-<?php 
+<?php
 require_once 'db.php';
 require_once 'functions.php';
-$produits= getProduits();
-var_dump( $produits );
+$produits = getProduits();
+$categories = getCategories();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,7 +19,7 @@ var_dump( $produits );
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark  shadow-lg">
         <div class="container-fluid">
-            <a class="navbar-brand" href="index.php">E-commerce</a>
+            <a class="navbar-brand" href="index.php">Electrocommerce</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -50,7 +50,9 @@ var_dump( $produits );
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                             <li><a class="dropdown-item" href="profile.php">Profile</a></li>
                             <li><a class="dropdown-item" href="orders.php">My Orders</a></li>
-                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
                             <li><a class="dropdown-item" href="logout.php">Logout</a></li>
                         </ul>
                     </li>
@@ -58,20 +60,21 @@ var_dump( $produits );
             </div>
         </div>
     </nav>
-     <!-- Main Section -->
-     <div class="container-fluid mt-4">
+    <!-- Main Section -->
+    <div class="container-fluid mt-4">
         <div class="row">
             <!-- Section Left: Filters -->
             <div class="col-md-3 mb-4">
                 <div class="card shadow-sm p-3">
                     <h5 class="mb-3">Filtrer</h5>
-                    <form action="#" method="GET">
-                        <!-- Catégories -->
+                    <form action="" method="post">
                         <div class="mb-3">
                             <label for="categorie" class="form-label">Catégorie</label>
                             <select class="form-select" id="categorie" name="categorie">
                                 <option value="">Toutes</option>
-                                <!-- TODO: Fill with PHP -->
+                                <?php foreach ($categories as $categorie) { ?>
+                                    <option value="<?php echo $categorie['id_categorie']; ?>"> <?php echo $categorie['nom_categorie']; ?></option>
+                                <?php } ?>
                             </select>
                         </div>
 
@@ -92,10 +95,9 @@ var_dump( $produits );
                     </form>
                 </div>
             </div>
-
             <!-- Section Right: Products -->
             <div class="col-md-9">
-                <div class="row" id="products"> 
+                <div class="row" id="products">
                     <div class="col-md-4 mb-4">
                         <div class="card h-100 shadow-sm">
                             <img src="..." class="card-img-top" alt="...">
