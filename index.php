@@ -1,18 +1,25 @@
 <?php
+session_start();
 require_once 'db.php';
 require_once 'functions.php';
 
-if (isset($_POST['min_price']) && isset($_POST['max_price']) && isset($_POST['categorie'])) {
+if (isset($_POST['min_price']) && isset($_POST['max_price']) && isset($_POST['categorie'])&& isset($_POST['sort_by'])) {
     $prixmin = $_POST['min_price'];
     $prixmax = $_POST['max_price'];
     $categoriefil = $_POST['categorie'];
+    $order= $_POST['sort_by'];
 } else {
     $prixmin = null;
     $prixmax = null;
     $categoriefil = null;
+    $order =null;
 }
-$produits = getProduits($categoriefil, $prixmin, $prixmax);
+$produits = getProduits($categoriefil, $prixmin, $prixmax,$order);
 $categories = getCategories();
+$totalitems=0;
+if(isset($_SESSION['panier'])){
+    $totalitems = array_sum($_SESSION['panier']);
+}
 ?>
 
 <!DOCTYPE html>
@@ -39,6 +46,7 @@ $categories = getCategories();
                     <li class="nav-item"><a href="login.php" class="nav-link">Connexion</a></li>
                     <li class="nav-item"><a href="register.php" class="nav-link">Inscription</a></li>
                     <li class="nav-item"><a href="panier.php" class="nav-link"><i class="fas fa-shopping-cart"></i> Panier</a></li>
+                    <span class="badge"><?php echo $totalitems; ?></span> <!-- Display item count -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="userMenu" role="button" data-bs-toggle="dropdown">
                             <i class="fas fa-user"></i> Compte
@@ -86,7 +94,7 @@ $categories = getCategories();
                     </form>
                 </div>
             </div>
-
+                                 
             <!-- PRODUCTS -->
             <div class="col-md-9">
                 <div class="row" id="products">
@@ -97,7 +105,9 @@ $categories = getCategories();
                                 <div class="card-body">
                                     <h5 class="card-title"><?= $produit['nom']; ?></h5>
                                     <p class="card-text fw-bold text-primary"><?= $produit['prix']; ?> DH</p>
-                                    <a href="#" class="btn btn-outline-success w-100">Ajouter au panier</a>
+                                    <form action="ajouterpanier.php?id=<?php echo $produit['id_produit']; ?>" method="post">
+                                        <button type="submit" class="btn btn-outline-success w-100" name="ajouter">Ajouter au panier</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>

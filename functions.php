@@ -1,6 +1,11 @@
 <?php
 require_once 'db.php';
-function getProduits($categoriefil = null, $prixmin = null, $prixmax = null)
+function getsession(){
+    if(!isset($_SESSION)){
+        session_start();
+    }
+}
+function getProduits($categoriefil = null, $prixmin = null, $prixmax = null,$order= null)
 {
     global $pdo;
     $req = "SELECT * FROM produit WHERE 1=1";
@@ -22,7 +27,14 @@ function getProduits($categoriefil = null, $prixmin = null, $prixmax = null)
         $conditions[] = "prix <= :prixmax";
         $params[':prixmax'] = $prixmax;
     }
-
+    if(!empty($prixmin) && !empty($prixmax) && !empty($categoriefil)){
+        $conditions [] = "categorie_id = :category";
+        $conditions[]= "prix BETWEEN :prixmin AND :prixmax";
+        $params[':category'] = $categoriefil;
+        $params [':prixmin'] = $prixmin;
+        $params [':prixmax'] = $prixmax;
+    }
+    
     if (!empty($conditions)) {
         $req .= " AND " . implode(" AND ", $conditions);
     }
@@ -42,4 +54,5 @@ function getCategories()
     $categories = $stmt->fetchAll();
     return $categories;
 }
+
 ?>
