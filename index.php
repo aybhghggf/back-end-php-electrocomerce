@@ -2,22 +2,19 @@
 require_once 'db.php';
 require_once 'functions.php';
 
-// Check if filters are set
 if (isset($_POST['min_price']) && isset($_POST['max_price']) && isset($_POST['categorie'])) {
-    $min_price = $_POST['min_price'];
-    $max_price = $_POST['max_price'];
+    $prixmin = $_POST['min_price'];
+    $prixmax = $_POST['max_price'];
     $categoriefil = $_POST['categorie'];
 } else {
-    $min_price = null;
-    $max_price = null;
+    $prixmin = null;
+    $prixmax = null;
     $categoriefil = null;
 }
-
-// Fetch filtered products
-$produits = getProduits($categoriefil, $min_price, $max_price);
-// Fetch categories for filter dropdown
-$categories = getCategories($categoriefil);
+$produits = getProduits($categoriefil, $prixmin, $prixmax);
+$categories = getCategories();
 ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -69,7 +66,7 @@ $categories = getCategories($categoriefil);
                         <div class="mb-3">
                             <label for="categorie" class="form-label">Catégorie</label>
                             <select class="form-select" id="categorie" name="categorie">
-                                <option value="">Toutes</option>
+                                <option value="Toutes">Toutes</option>
                                 <?php foreach ($categories as $categorie) { ?>
                                     <option value="<?= $categorie['id_categorie']; ?>" <?= (isset($categoriefil) && $categoriefil == $categorie['id_categorie']) ? 'selected' : ''; ?>>
                                         <?= $categorie['nom_categorie']; ?>
@@ -96,7 +93,7 @@ $categories = getCategories($categoriefil);
                     <?php foreach ($produits as $produit) { ?>
                         <div class="col-md-4 mb-4">
                             <div class="card h-100 shadow-sm">
-                                <img src="images/<?= $produit['image_path']; ?>" class="card-img-top" alt="<?= $produit['nom']; ?>">
+                                <img src="<?= $produit['image_path']; ?>" class="card-img-top" alt="<?= $produit['nom']; ?>">
                                 <div class="card-body">
                                     <h5 class="card-title"><?= $produit['nom']; ?></h5>
                                     <p class="card-text fw-bold text-primary"><?= $produit['prix']; ?> DH</p>

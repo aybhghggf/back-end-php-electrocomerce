@@ -1,30 +1,45 @@
 <?php
 require_once 'db.php';
-function getProduits()
+function getProduits($categoriefil = null, $prixmin = null, $prixmax = null)
 {
     global $pdo;
+    $req = "SELECT * FROM produit WHERE 1=1";
+    $params = [];
+    $conditions = [];
 
-    // Récupérer tous les produits sans filtre
-    $req = "SELECT * FROM produit";
+    if ($categoriefil !== null && $categoriefil !== "Toutes") {
+        $conditions[] = "categorie_id = :category";
+        $params[':category'] = $categoriefil;
+    }
+    if (!empty($prixmin) && !empty($prixmax)) {
+        $conditions[] = "prix BETWEEN :prixmin AND :prixmax";
+        $params[':prixmin'] = $prixmin;
+        $params[':prixmax'] = $prixmax;
+    } elseif (!empty($prixmin)) {
+        $conditions[] = "prix >= :prixmin";
+        $params[':prixmin'] = $prixmin;
+    } elseif (!empty($prixmax)) {
+        $conditions[] = "prix <= :prixmax";
+        $params[':prixmax'] = $prixmax;
+    }
+
+    if (!empty($conditions)) {
+        $req .= " AND " . implode(" AND ", $conditions);
+    }
     $stmt = $pdo->prepare($req);
-    $stmt->execute();
-
-    // Récupérer tous les produits
-    $produits = $stmt->fetchAll();
-    return $produits;
+    $stmt->execute($params);
+    return $stmt->fetchAll();
 }
+
 function getCategories()
 {
     global $pdo;
 
-    // Récupérer toutes les catégories sans filtre
     $req = "SELECT * FROM categorie";
     $stmt = $pdo->prepare($req);
     $stmt->execute();
 
-    // Récupérer toutes les catégories
     $categories = $stmt->fetchAll();
     return $categories;
 }
-
 ?>
