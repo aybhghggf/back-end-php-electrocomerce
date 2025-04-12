@@ -1,120 +1,116 @@
 <?php
 require_once 'db.php';
 require_once 'functions.php';
-$produits = getProduits();
-$categories = getCategories();
+
+// Check if filters are set
+if (isset($_POST['min_price']) && isset($_POST['max_price']) && isset($_POST['categorie'])) {
+    $min_price = $_POST['min_price'];
+    $max_price = $_POST['max_price'];
+    $categoriefil = $_POST['categorie'];
+} else {
+    $min_price = null;
+    $max_price = null;
+    $categoriefil = null;
+}
+
+// Fetch filtered products
+$produits = getProduits($categoriefil, $min_price, $max_price);
+// Fetch categories for filter dropdown
+$categories = getCategories($categoriefil);
 ?>
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Navbar</title>
-    <!-- Bootstrap CSS -->
+    <title>Electrocommerce</title>
+    <link rel="stylesheet" href="s.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"> <!-- For Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
-
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark  shadow-lg">
-        <div class="container-fluid">
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark shadow">
+        <div class="container">
             <a class="navbar-brand" href="index.php">Electrocommerce</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="collapse navbar-collapse" id="navMenu">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="index.php">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="login.php">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="register.php">Register</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="panier.php">
-                            <i class="fas fa-shopping-cart"></i> Cart
-                        </a>
-                    </li>
-
-                    <!-- Dropdown Menu for User Profile -->
+                    <li class="nav-item"><a href="index.php" class="nav-link">Accueil</a></li>
+                    <li class="nav-item"><a href="login.php" class="nav-link">Connexion</a></li>
+                    <li class="nav-item"><a href="register.php" class="nav-link">Inscription</a></li>
+                    <li class="nav-item"><a href="panier.php" class="nav-link"><i class="fas fa-shopping-cart"></i> Panier</a></li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            <i class="fas fa-user"></i> Account
+                        <a class="nav-link dropdown-toggle" href="#" id="userMenu" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user"></i> Compte
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="profile.php">Profile</a></li>
-                            <li><a class="dropdown-item" href="orders.php">My Orders</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="logout.php">Logout</a></li>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="profile.php">Profil</a></li>
+                            <li><a class="dropdown-item" href="orders.php">Mes Commandes</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="logout.php">Déconnexion</a></li>
                         </ul>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
-    <!-- Main Section -->
-    <div class="container-fluid mt-4">
+
+    <!-- MAIN -->
+    <div class="container mt-5">
         <div class="row">
-            <!-- Section Left: Filters -->
+            <!-- FILTERS -->
             <div class="col-md-3 mb-4">
                 <div class="card shadow-sm p-3">
-                    <h5 class="mb-3">Filtrer</h5>
-                    <form action="" method="post">
+                    <h5 class="filter-title mb-3">Filtres</h5>
+                    <form action="index.php" method="post">
                         <div class="mb-3">
                             <label for="categorie" class="form-label">Catégorie</label>
                             <select class="form-select" id="categorie" name="categorie">
                                 <option value="">Toutes</option>
                                 <?php foreach ($categories as $categorie) { ?>
-                                    <option value="<?php echo $categorie['id_categorie']; ?>"> <?php echo $categorie['nom_categorie']; ?></option>
+                                    <option value="<?= $categorie['id_categorie']; ?>" <?= (isset($categoriefil) && $categoriefil == $categorie['id_categorie']) ? 'selected' : ''; ?>>
+                                        <?= $categorie['nom_categorie']; ?>
+                                    </option>
                                 <?php } ?>
                             </select>
                         </div>
-
-                        <!-- Prix min -->
                         <div class="mb-3">
                             <label for="min_price" class="form-label">Prix Min</label>
-                            <input type="number" class="form-control" id="min_price" name="min_price" placeholder="0">
+                            <input type="number" class="form-control" name="min_price" id="min_price" placeholder="0" value="<?= $min_price; ?>">
                         </div>
-
-                        <!-- Prix max -->
                         <div class="mb-3">
                             <label for="max_price" class="form-label">Prix Max</label>
-                            <input type="number" class="form-control" id="max_price" name="max_price" placeholder="5000">
+                            <input type="number" class="form-control" name="max_price" id="max_price" placeholder="5000" value="<?= $max_price; ?>">
                         </div>
-
-                        <!-- Bouton filtre -->
-                        <button type="submit" class="btn btn-primary w-100">Appliquer</button>
+                        <button type="submit" name="submit" class="btn btn-primary w-100">Appliquer</button>
                     </form>
                 </div>
             </div>
-            <!-- Section Right: Products -->
+
+            <!-- PRODUCTS -->
             <div class="col-md-9">
                 <div class="row" id="products">
-                    <div class="col-md-4 mb-4">
-                        <div class="card h-100 shadow-sm">
-                            <img src="..." class="card-img-top" alt="...">
-                            <div class="card-body">
-                                <h5 class="card-title">Nom Produit</h5>
-                                <p class="card-text">Prix: 200 DH</p>
-                                <a href="#" class="btn btn-sm btn-outline-primary">Ajouter au panier</a>
+                    <?php foreach ($produits as $produit) { ?>
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100 shadow-sm">
+                                <img src="images/<?= $produit['image_path']; ?>" class="card-img-top" alt="<?= $produit['nom']; ?>">
+                                <div class="card-body">
+                                    <h5 class="card-title"><?= $produit['nom']; ?></h5>
+                                    <p class="card-text fw-bold text-primary"><?= $produit['prix']; ?> DH</p>
+                                    <a href="#" class="btn btn-outline-success w-100">Ajouter au panier</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    -->
+                    <?php } ?>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Bootstrap JS -->
+
+    <!-- BOOTSTRAP JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

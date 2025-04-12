@@ -1,23 +1,30 @@
-<?php 
+<?php
 require_once 'db.php';
+function getProduits()
+{
+    global $pdo;
 
-function getProduits(){
-    global $pdo ;
-    $req=" SELECT * FROM produit";
+    // Récupérer tous les produits sans filtre
+    $req = "SELECT * FROM produit";
     $stmt = $pdo->prepare($req);
     $stmt->execute();
+
+    // Récupérer tous les produits
     $produits = $stmt->fetchAll();
     return $produits;
 }
-function getCategories(){
-    global $pdo ;
-    $req=" SELECT * FROM categorie";
+function getCategories()
+{
+    global $pdo;
+
+    // Récupérer toutes les catégories sans filtre
+    $req = "SELECT * FROM categorie";
     $stmt = $pdo->prepare($req);
     $stmt->execute();
-    $categories= $stmt->fetchAll();
+
+    // Récupérer toutes les catégories
+    $categories = $stmt->fetchAll();
     return $categories;
 }
-
-
 
 ?>

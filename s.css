@@ -1,0 +1,22 @@
+body {
+    background-color: #f8f9fa;
+}
+.navbar {
+    background: linear-gradient(90deg, #343a40, #212529);
+}
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+.card img {
+    height: 200px;
+    object-fit: cover;
+}
+.card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+.filter-title {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
