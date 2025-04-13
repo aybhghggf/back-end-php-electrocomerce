@@ -54,5 +54,18 @@ function getCategories()
     $categories = $stmt->fetchAll();
     return $categories;
 }
-
+function getProductById($id) {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT * FROM produit WHERE id_produit = :id");
+    $stmt->execute([':id' => $id]);
+    return $stmt->fetch();
+}
+function addClient($nomcomplet=null ,$email=null ,$password=null){
+    global $pdo;
+    if( !empty($nomcomplet) && !empty($email) && !empty($password)){
+        $req="INSERT INTO `client`( `nom_complet`, `email`, `password`) VALUES (?,?,?)";
+        $stmt = $pdo->prepare($req);
+        $stmt->execute([$nomcomplet,$email,$password]);
+        
+    }}
 ?>

@@ -20,3 +20,15 @@ body {
     font-weight: bold;
     font-size: 1.2rem;
 }
+/* Style for the cart badge */
+.navbar .nav-link .badge {
+    font-size: 0.8rem; /* Adjust the font size for better balance */
+    padding: 0.5em 0.7em; /* Add some padding to make it look like a proper badge */
+    border-radius: 50%; /* Make the badge round */
+    background-color: #e74c3c; /* Red background for the badge */
+    color: white; /* White text color */
+    position: absolute; /* Position it relative to the cart icon */
+    top: -5px; /* Slightly adjust the position */
+    right: -5px; /* Adjust to the right edge */
+    z-index: 10; /* Ensure it sits on top of other elements */
+}
