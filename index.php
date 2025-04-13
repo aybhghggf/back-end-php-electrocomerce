@@ -2,6 +2,13 @@
 session_start();
 require_once 'db.php';
 require_once 'functions.php';
+if(isset($_GET['mesage'])&& $_GET['mesage'] == 'bienpasser'){
+    echo'<div class="alert alert-success alert-dismissible fade show" role="alert">
+    Votre commande est bien effectuer
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        ';
+}
 if(isset($_GET['msg'])&& $_GET['msg']=='okk'){
     echo'<div class="alert alert-success alert-dismissible fade show" role="alert">
             ✅ Connexion réussie !
@@ -64,8 +71,8 @@ if(isset($_SESSION['panier'])){
                         </ul>
                         <?php } else { ?> 
                             <ul class="dropdown-menu dropdown-menu-end"> 
-                                <li><a class="dropdown-item" href="login.php">Connexion</a></li>
-                                <li><a class="dropdown-item" href="register.php">Inscription</a></
+                                <li><a class="dropdown-item" href="conexion.php">Connexion</a></li>
+                                <li><a class="dropdown-item" href="creer.php">Inscription</a></li>
                             </ul>
                             <?php } ?>
 

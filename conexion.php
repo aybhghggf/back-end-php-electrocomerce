@@ -1,6 +1,13 @@
 <?php 
 require_once 'functions.php';
 getsession();
+if(isset($_GET['meg']) && $_GET['meg'] == 'cnx'){
+    echo'<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    vous devez connecter a un compte pour vous efeectuez
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    ';
+}
 if(isset($_GET['msg'])&& $_GET['msg']=="okc"){
     echo'<div class="alert alert-success alert-dismissible fade show" role="alert">
             ✅ Creation de compte réussie !
