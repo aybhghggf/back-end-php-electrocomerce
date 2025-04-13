@@ -16,18 +16,16 @@ if(isset($_GET['msg'])&& $_GET['msg']=='okk'){
             </div>
             ';
 }
-if (isset($_POST['min_price']) && isset($_POST['max_price']) && isset($_POST['categorie'])&& isset($_POST['sort_by'])) {
+if (isset($_POST['min_price']) && isset($_POST['max_price']) && isset($_POST['categorie'])) {
     $prixmin = $_POST['min_price'];
     $prixmax = $_POST['max_price'];
     $categoriefil = $_POST['categorie'];
-    $order= $_POST['sort_by'];
 } else {
     $prixmin = null;
     $prixmax = null;
     $categoriefil = null;
-    $order =null;
 }
-$produits = getProduits($categoriefil, $prixmin, $prixmax,$order);
+$produits = getProduits($categoriefil, $prixmin, $prixmax);
 $categories = getCategories();
 $totalitems=0;
 if(isset($_SESSION['panier'])){
