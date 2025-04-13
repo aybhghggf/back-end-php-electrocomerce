@@ -66,6 +66,16 @@ function addClient($nomcomplet=null ,$email=null ,$password=null){
         $req="INSERT INTO `client`( `nom_complet`, `email`, `password`) VALUES (?,?,?)";
         $stmt = $pdo->prepare($req);
         $stmt->execute([$nomcomplet,$email,$password]);
-        
+
     }}
+function getclient($email =null ,$password=null,$client= null){
+    global $pdo;
+    if( !empty($email) && !empty($password)){
+        $req="SELECT * FROM `client` WHERE `email`= ? AND `password`= ? ";
+        $stmt = $pdo->prepare($req);
+        $stmt->execute([$email,$password]);
+        $client= $stmt->fetch();
+        return $client;
+    }
+}
 ?>

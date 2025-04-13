@@ -2,7 +2,13 @@
 session_start();
 require_once 'db.php';
 require_once 'functions.php';
-
+if(isset($_GET['msg'])&& $_GET['msg']=='okk'){
+    echo'<div class="alert alert-success alert-dismissible fade show" role="alert">
+            ✅ Connexion réussie !
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            ';
+}
 if (isset($_POST['min_price']) && isset($_POST['max_price']) && isset($_POST['categorie'])&& isset($_POST['sort_by'])) {
     $prixmin = $_POST['min_price'];
     $prixmax = $_POST['max_price'];
@@ -43,20 +49,26 @@ if(isset($_SESSION['panier'])){
             <div class="collapse navbar-collapse" id="navMenu">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a href="index.php" class="nav-link">Accueil</a></li>
-                    <li class="nav-item"><a href="login.php" class="nav-link">Connexion</a></li>
-                    <li class="nav-item"><a href="register.php" class="nav-link">Inscription</a></li>
                     <li class="nav-item"><a href="panier.php" class="nav-link"><i class="fas fa-shopping-cart"></i> Panier</a></li>
                     <span class="badge"><?php echo $totalitems; ?></span> <!-- Display item count -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="userMenu" role="button" data-bs-toggle="dropdown">
                             <i class="fas fa-user"></i> Compte
                         </a>
+                        <?php 
+                            if(isset($_SESSION['user'])){ ?>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="profile.php">Profil</a></li>
                             <li><a class="dropdown-item" href="orders.php">Mes Commandes</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="logout.php">Déconnexion</a></li>
                         </ul>
+                        <?php } else { ?> 
+                            <ul class="dropdown-menu dropdown-menu-end"> 
+                                <li><a class="dropdown-item" href="login.php">Connexion</a></li>
+                                <li><a class="dropdown-item" href="register.php">Inscription</a></
+                            </ul>
+                            <?php } ?>
+
                     </li>
                 </ul>
             </div>
